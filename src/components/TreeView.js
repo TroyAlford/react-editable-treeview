@@ -1,14 +1,25 @@
 import * as React from 'react'
 
+const map = new WeakMap()
+const internal = (object) => {
+  if (!map.has(object)) {
+    map.set(object, {})
+  }
+
+  return map.get(object)
+}
+
+const classes = (...args) =>
+  [].concat(...args)
+  .filter(c => c && typeof c === 'string')
+  .join(' ')
+
 export default class TreeView extends React.Component {
   static editModeRenderer(node, props) {
-    const classes = []
-      .concat(props.nodeClass)
-      .concat(props.nodeEditModeClass)
-      .filter(c => c && typeof c === 'string')
+    const className = classes(props.nodeClass, props.nodeEditModeClass)
 
     return (
-      <div className={classes.join(' ')}>
+      <div key={props.key} className={className}>
         <div className="node-text">
           <input type="text" value={node.text} />
         </div>
@@ -20,42 +31,55 @@ export default class TreeView extends React.Component {
   }
 
   static viewModeRenderer(node, props) {
-    const classes = []
-      .concat(props.nodeClass)
-      .concat(props.nodeViewModeClass)
-      .filter(c => c && typeof c === 'string')
+    const className = classes(props.nodeClass, props.nodeViewModeClass)
 
-    /* eslint-disable react/jsx-indent */
     return (
-      <div className={classes.join(' ')}>
-        { node.url
+      <li key={props.key} className={className}>
+        { node.url /* eslint-disable react/jsx-indent */
           ? <div className="node-link">
               <a href={node.url}>{node.text || node.url}</a>
             </div>
           : <div className="node-text">{node.text}</div>
         }
-      </div>
+        {this.renderNodeList(node.children)}
+      </li>
     )
   }
 
+  constructor(props) {
+    super(props)
+    internal(this).editing = props.editing || []
+    this.isEditing = node => internal(this).editing.indexOf(node) !== -1
+  }
+  componentWillReceiveProps(props) {
+    if (props.editing !== undefined) {
+      internal(this).editing = props.editing
+    }
+  }
+
   renderNodeList(nodes) {
-    return nodes.map((node, index) => {
-      const props = { ...this.props, key: node.key || index }
+    if (!nodes || !Array.isArray(nodes) || nodes.length === 0) return []
 
-      if (this.editable !== false && this.editing.indexOf(node) !== -1) {
-        return this.props.editModeRenderer(node, props)
-      }
+    return (
+      <ul className="node-list">
+        {nodes.map((node, index) => {
+          const props = { ...this.props, key: node.key || index }
 
-      return this.props.viewModeRenderer(node, props)
-    })
+          return (this.editable !== false && this.isEditing(node))
+            ? this.props.editModeRenderer.call(this, node, props)
+            : this.props.viewModeRenderer.call(this, node, props)
+        })}
+      </ul>
+    )
   }
 
   render() {
+    const className = classes(this.props.className)
     // [].concat handles a single node/[] of nodes correctly
     const nodes = [].concat(this.props.nodes)
 
     return (
-      <div className="treeview-container">
+      <div className={className}>
         {this.renderNodeList(nodes)}
       </div>
     )
@@ -86,7 +110,8 @@ const ClassListShape = React.PropTypes.oneOfType([
 
 TreeView.propTypes = {
   editable: React.PropTypes.bool,    // eslint-disable-line react/no-unused-prop-types
-  nodes:    React.PropTypes.oneOfType([NodeShape, NodeListShape]),
+  editing:  NodeListShape,
+  nodes:    NodeListShape,
 
   className:         ClassListShape, // eslint-disable-line react/no-unused-prop-types
   nodeClass:         ClassListShape, // eslint-disable-line react/no-unused-prop-types
@@ -98,6 +123,7 @@ TreeView.propTypes = {
 }
 TreeView.defaultProps = {
   editable: true,
+  editing:  undefined,
   nodes:    [],
 
   className:         'treeview-container',
