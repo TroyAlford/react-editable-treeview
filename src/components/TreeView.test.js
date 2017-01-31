@@ -88,4 +88,24 @@ describe('TreeView', () => {
     //     txt:grandchild node-list  txt:child
     expect(grandchildNode.parentNode.parentNode).toEqual(childNode)
   })
+
+  it('honors editing list', () => {
+    const editRenderer = jest.fn()
+    const editNode = { text: 'editing' }
+
+    const viewRenderer = jest.fn()
+    const viewNode = { text: 'viewing' }
+
+    render(<TreeView
+      nodes={[viewNode, editNode]} editing={[editNode]}
+      nodeViewModeClass="view-node" nodeEditModeClass="edit-node"
+      editModeRenderer={editRenderer} viewModeRenderer={viewRenderer}
+    />)
+
+    expect(viewRenderer.mock.calls).toHaveLength(1)
+    expect(viewRenderer.mock.calls[0][0]).toEqual(viewNode)
+
+    expect(editRenderer.mock.calls).toHaveLength(1)
+    expect(editRenderer.mock.calls[0][0]).toEqual(editNode)
+  })
 })

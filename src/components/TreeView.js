@@ -48,11 +48,11 @@ export default class TreeView extends React.Component {
 
   constructor(props) {
     super(props)
-    internal(this).editing = props.editing || []
+    internal(this).editing = Array.isArray(props.editing) ? props.editing : []
     this.isEditing = node => internal(this).editing.indexOf(node) !== -1
   }
   componentWillReceiveProps(props) {
-    if (props.editing !== undefined) {
+    if (Array.isArray(props.editing)) {
       internal(this).editing = props.editing
     }
   }
