@@ -1,7 +1,7 @@
 {
   "name": "react-editable-treeview",
   "version": "0.0.1",
-  "description": "A treeview React component with editable nodes",
+  "description": "React TreeView component with editable nodes",
   "main": "dist/index.js",
   "author": "Troy Alford",
   "license": "MIT",
