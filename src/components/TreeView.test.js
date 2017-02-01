@@ -89,11 +89,11 @@ describe('TreeView', () => {
     expect(grandchildNode.parentNode.parentNode).toEqual(childNode)
   })
 
-  it('honors editing list', () => {
-    const editRenderer = jest.fn()
+  it('honors editing list and view/edit settings', () => {
+    const editRenderer = jest.fn().mockImplementation(TreeView.editModeRenderer)
     const editNode = { text: 'editing' }
 
-    const viewRenderer = jest.fn()
+    const viewRenderer = jest.fn().mockImplementation(TreeView.viewModeRenderer)
     const viewNode = { text: 'viewing' }
 
     const cloneNode = { text: 'editing' }
@@ -114,6 +114,9 @@ describe('TreeView', () => {
     viewRenderer.mockClear()
     editRenderer.mockClear()
 
+    expect(Array.from(parent.getElementsByClassName('view-node'))).toHaveLength(3)
+    expect(Array.from(parent.getElementsByClassName('edit-node'))).toHaveLength(0)
+
     render(<TreeView
       nodes={[viewNode, editNode, cloneNode]} editing={[editNode]}
       nodeViewModeClass="view-node" nodeEditModeClass="edit-node"
@@ -126,5 +129,24 @@ describe('TreeView', () => {
 
     expect(editRenderer.mock.calls).toHaveLength(1)
     expect(editRenderer.mock.calls[0][0]).toEqual(editNode)
+
+    expect(Array.from(parent.getElementsByClassName('view-node'))).toHaveLength(2)
+    expect(Array.from(parent.getElementsByClassName('edit-node'))).toHaveLength(1)
+  })
+
+  it('calls onNodeEdit binding correctly, with default renderers', () => {
+    const node = { text: 'text', url: 'http://www.example.com' }
+    const onNodeEdit = jest.fn().mockImplementation(TreeView.defaultProps.onNodeEdit)
+
+    render(<TreeView nodes={[node]} editing={[node]} onNodeEdit={onNodeEdit} />)
+
+    const textFields = parent.getElementsByTagName('input')
+    TestUtils.Simulate.change(textFields[0], { target: { value: 'new-text' } })
+    expect(onNodeEdit).toHaveBeenLastCalledWith(node, { text: 'new-text', url: node.url })
+
+    TestUtils.Simulate.change(textFields[1], { target: { value: 'new-url' } })
+    expect(onNodeEdit).toHaveBeenLastCalledWith(node, { text: node.text, url: 'new-url' })
+
+    expect(onNodeEdit.mock.calls).toHaveLength(2)
   })
 })

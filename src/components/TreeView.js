@@ -15,10 +15,20 @@ export default class TreeView extends React.Component {
     return (
       <div key={props.key} className={className}>
         <div className="node-text">
-          <input type="text" value={node.text} />
+          <input
+            type="text" value={node.text}
+            onChange={e => this.props.onNodeEdit.call(this, node, {
+              ...node, text: e.target.value,
+            })}
+          />
         </div>
         <div className="node-url">
-          <input type="text" value={node.url} />
+          <input
+            type="text" value={node.url}
+            onChange={e => this.props.onNodeEdit.call(this, node, {
+              ...node, url: e.target.value,
+            })}
+          />
         </div>
       </div>
     )
@@ -92,8 +102,8 @@ const ClassListShape = React.PropTypes.oneOfType([
 ])
 
 TreeView.propTypes = {
-  editing:  NodeListShape,
-  nodes:    NodeListShape,
+  editing: NodeListShape,
+  nodes:   NodeListShape,
 
   className:         ClassListShape, // eslint-disable-line react/no-unused-prop-types
   nodeClass:         ClassListShape, // eslint-disable-line react/no-unused-prop-types
@@ -102,10 +112,12 @@ TreeView.propTypes = {
 
   editModeRenderer: React.PropTypes.func.isRequired,
   viewModeRenderer: React.PropTypes.func.isRequired,
+
+  onNodeEdit: React.PropTypes.func.isRequired,
 }
 TreeView.defaultProps = {
-  editing:  undefined,
-  nodes:    [],
+  editing: undefined,
+  nodes:   [],
 
   className:         'treeview-container',
   nodeClass:         'treeview-node',
@@ -114,4 +126,6 @@ TreeView.defaultProps = {
 
   editModeRenderer: TreeView.editModeRenderer,
   viewModeRenderer: TreeView.viewModeRenderer,
+
+  onNodeEdit: (current, updated) => {}, // eslint-disable-line no-unused-vars
 }
