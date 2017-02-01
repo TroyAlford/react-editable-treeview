@@ -96,14 +96,33 @@ describe('TreeView', () => {
     const viewRenderer = jest.fn()
     const viewNode = { text: 'viewing' }
 
+    const cloneNode = { text: 'editing' }
+
     render(<TreeView
-      nodes={[viewNode, editNode]} editing={[editNode]}
+      nodes={[viewNode, editNode, cloneNode]}
       nodeViewModeClass="view-node" nodeEditModeClass="edit-node"
       editModeRenderer={editRenderer} viewModeRenderer={viewRenderer}
     />)
 
-    expect(viewRenderer.mock.calls).toHaveLength(1)
+    expect(viewRenderer.mock.calls).toHaveLength(3)
     expect(viewRenderer.mock.calls[0][0]).toEqual(viewNode)
+    expect(viewRenderer.mock.calls[1][0]).toEqual(editNode)
+    expect(viewRenderer.mock.calls[2][0]).toEqual(cloneNode)
+
+    expect(editRenderer.mock.calls).toHaveLength(0)
+
+    viewRenderer.mockClear()
+    editRenderer.mockClear()
+
+    render(<TreeView
+      nodes={[viewNode, editNode, cloneNode]} editing={[editNode]}
+      nodeViewModeClass="view-node" nodeEditModeClass="edit-node"
+      editModeRenderer={editRenderer} viewModeRenderer={viewRenderer}
+    />)
+
+    expect(viewRenderer.mock.calls).toHaveLength(2)
+    expect(viewRenderer.mock.calls[0][0]).toEqual(viewNode)
+    expect(viewRenderer.mock.calls[1][0]).toEqual(cloneNode)
 
     expect(editRenderer.mock.calls).toHaveLength(1)
     expect(editRenderer.mock.calls[0][0]).toEqual(editNode)

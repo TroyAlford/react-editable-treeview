@@ -1,14 +1,5 @@
 import * as React from 'react'
 
-const map = new WeakMap()
-const internal = (object) => {
-  if (!map.has(object)) {
-    map.set(object, {})
-  }
-
-  return map.get(object)
-}
-
 const classes = (...args) =>
   [].concat(...args)
   .filter(c => c && typeof c === 'string')
@@ -48,12 +39,11 @@ export default class TreeView extends React.Component {
 
   constructor(props) {
     super(props)
-    internal(this).editing = Array.isArray(props.editing) ? props.editing : []
-    this.isEditing = node => internal(this).editing.indexOf(node) !== -1
+    this.isEditing = node => (this.props.editing || []).indexOf(node) !== -1
   }
   componentWillReceiveProps(props) {
     if (Array.isArray(props.editing)) {
-      internal(this).editing = props.editing
+      this.isEditing = node => (this.props.editing || []).indexOf(node) !== -1
     }
   }
 
