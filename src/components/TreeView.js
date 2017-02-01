@@ -5,6 +5,9 @@ const classes = (...args) =>
   .filter(c => c && typeof c === 'string')
   .join(' ')
 
+const contains = (array, value) =>
+  (Array.isArray(array) ? array : []).indexOf(value) !== -1
+
 export default class TreeView extends React.Component {
   static editModeRenderer(node, props) {
     const className = classes(props.nodeClass, props.nodeEditModeClass)
@@ -37,16 +40,6 @@ export default class TreeView extends React.Component {
     )
   }
 
-  constructor(props) {
-    super(props)
-    this.isEditing = node => (this.props.editing || []).indexOf(node) !== -1
-  }
-  componentWillReceiveProps(props) {
-    if (Array.isArray(props.editing)) {
-      this.isEditing = node => (this.props.editing || []).indexOf(node) !== -1
-    }
-  }
-
   renderNodeList(nodes) {
     if (!nodes || !Array.isArray(nodes) || nodes.length === 0) return []
 
@@ -55,7 +48,7 @@ export default class TreeView extends React.Component {
         {nodes.map((node, index) => {
           const props = { ...this.props, key: node.key || index }
 
-          return (this.editable !== false && this.isEditing(node))
+          return (contains(this.props.editing, node))
             ? this.props.editModeRenderer.call(this, node, props)
             : this.props.viewModeRenderer.call(this, node, props)
         })}
@@ -99,7 +92,6 @@ const ClassListShape = React.PropTypes.oneOfType([
 ])
 
 TreeView.propTypes = {
-  editable: React.PropTypes.bool,    // eslint-disable-line react/no-unused-prop-types
   editing:  NodeListShape,
   nodes:    NodeListShape,
 
@@ -112,7 +104,6 @@ TreeView.propTypes = {
   viewModeRenderer: React.PropTypes.func.isRequired,
 }
 TreeView.defaultProps = {
-  editable: true,
   editing:  undefined,
   nodes:    [],
 
