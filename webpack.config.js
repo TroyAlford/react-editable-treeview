@@ -12,7 +12,10 @@ const PLACEHOLDER = 'PLACEHOLDER'
 
 const bundle = {
   entry: PLACEHOLDER,
-  externals: { react: 'React' },
+  externals: {
+    'react': 'React',
+    'react-dom': 'ReactDOM',
+  },
   module: {
     loaders: [{
       test:    /\.js$/,
