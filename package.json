@@ -38,10 +38,9 @@
   "scripts": {
     "test": "jest",
     "pre-build": "mkdir -p lib examples/lib && rm -rf lib/* examples/lib/*",
-    "build": "yarn pre-build && webpack",
-    "build-commit": "yarn build && (git add examples/lib/. /lib/."
+    "build": "yarn pre-build && webpack"
   },
-  "pre-commit": ["test", "build-commit"],
+  "pre-commit": ["test", "build"],
   "babel": {
     "plugins": [
       "transform-object-rest-spread"
