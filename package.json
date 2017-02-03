@@ -27,15 +27,17 @@
     "eslint-plugin-react": "^6.9.0",
     "jest": "^18.1.0",
     "jest-cli": "^18.1.0",
+    "pre-commit": "^1.2.2",
     "publish": "^0.6.0",
     "react-addons-test-utils": "^15.4.2",
     "webpack": "^2.2.1"
   },
   "scripts": {
     "test": "jest",
-    "pre-build": "mkdir -p dist examples/dist && rm -rf dist/* examples/dist/*",
+    "pre-build": "mkdir -p lib examples/lib && rm -rf lib/* examples/lib/*",
     "build": "yarn pre-build && webpack"
   },
+  "pre-commit": ["test", "build"],
   "babel": {
     "plugins": [
       "transform-object-rest-spread"

@@ -27,21 +27,27 @@ const bundle = {
     libraryTarget:  'umd',
     umdNamedDefine: true,
   },
-  plugins: [],
+  plugins: [new webpack.optimize.UglifyJsPlugin({ minimize: true })],
 }
-
-const uglify = new webpack.optimize.UglifyJsPlugin({ minimize: true })
 
 module.exports = [
   Object.assign({}, bundle, {
     /* Main Bundle */
     entry: `${__dirname}/src/components/TreeView.js`,
     output: Object.assign({}, bundle.output, {
-      filename: ['react-editable-treeview', (PRODUCTION ? '.min' : ''), '.js'].join(''),
-      library: 'react-editable-treeview',
+      filename: `${library}.min.js`,
+      library,
       path: `${__dirname}/lib`,
     }),
-    plugins: PRODUCTION ? [uglify] : [],
+  }),
+  Object.assign({}, bundle, {
+    entry: `${__dirname}/src/components/TreeView.js`,
+    output: Object.assign({}, bundle.output, {
+      filename: `${library}.js`,
+      library,
+      path: `${__dirname}/lib`,
+    }),
+    plugins: [],
   }),
   Object.assign({}, bundle, {
     /* Examples */
@@ -49,8 +55,7 @@ module.exports = [
     output: Object.assign({}, bundle.output, {
       filename: 'example.min.js',
       library: 'example',
-      path: `${__dirname}/examples/dist`,
+      path: `${__dirname}/examples/lib`,
     }),
-    plugins: [uglify],
   }),
 ]
