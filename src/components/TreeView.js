@@ -113,10 +113,11 @@ TreeView.propTypes = {
   editModeRenderer: React.PropTypes.func.isRequired,
   viewModeRenderer: React.PropTypes.func.isRequired,
 
-  onNodeEdit: React.PropTypes.func.isRequired,
+  onNodeClick: React.PropTypes.func,
+  onNodeEdit:  React.PropTypes.func,
 }
 TreeView.defaultProps = {
-  editing: undefined,
+  editing: [],
   nodes:   [],
 
   className:         'treeview-container',
@@ -127,5 +128,6 @@ TreeView.defaultProps = {
   editModeRenderer: TreeView.editModeRenderer,
   viewModeRenderer: TreeView.viewModeRenderer,
 
-  onNodeEdit: (current, updated) => {}, // eslint-disable-line no-unused-vars
+  onNodeClick: (node) => {},             // eslint-disable-line no-unused-vars
+  onNodeEdit:  (current, updated) => {}, // eslint-disable-line no-unused-vars
 }

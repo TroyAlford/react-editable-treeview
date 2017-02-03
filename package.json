@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
+    "babel-loader": "^6.2.10",
     "babel-plugin-transform-object-rest-spread": "^6.22.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-jest": "^18.0.0",
@@ -27,12 +28,13 @@
     "jest": "^18.1.0",
     "jest-cli": "^18.1.0",
     "publish": "^0.6.0",
-    "react-addons-test-utils": "^15.4.2"
+    "react-addons-test-utils": "^15.4.2",
+    "webpack": "^2.2.1"
   },
   "scripts": {
     "test": "jest",
-    "dist": "babel src/components/TreeView.js -o dist/index.js",
-    "publish-to-npm": "publish"
+    "pre-build": "mkdir -p dist examples/dist && rm -rf dist/* examples/dist/*",
+    "build": "yarn pre-build && webpack"
   },
   "babel": {
     "plugins": [
