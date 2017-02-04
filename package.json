@@ -2,7 +2,7 @@
   "name": "react-editable-treeview",
   "version": "0.0.1",
   "description": "React TreeView component with editable nodes",
-  "main": "dist/index.js",
+  "main": "lib/TreeView.js",
   "author": "Troy Alford",
   "license": "MIT",
   "repository": {
@@ -24,6 +24,7 @@
     "eslint-plugin-react": "^6.9.0",
     "jest": "^18.1.0",
     "jest-cli": "^18.1.0",
+    "node-sass": "^4.5.0",
     "pre-commit": "^1.2.2",
     "publish": "^0.6.0",
     "react": "^15.4.2",
@@ -38,9 +39,14 @@
   "scripts": {
     "test": "jest",
     "pre-build": "mkdir -p lib examples/lib && rm -rf lib/* examples/lib/*",
-    "build": "yarn pre-build && webpack"
+    "build-sass": "node-sass src/scss/TreeView.scss -o lib/ --output-style compressed",
+    "build": "yarn pre-build && (webpack & yarn build-sass)",
+    "prepublish": "yarn build"
   },
-  "pre-commit": ["test", "build"],
+  "pre-commit": [
+    "test",
+    "build"
+  ],
   "babel": {
     "plugins": [
       "transform-object-rest-spread"

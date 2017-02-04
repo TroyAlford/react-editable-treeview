@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
  <head>
-  <base href="file:///Users/troyalford/Projects/react-editable-treeview/examples/lib/" />
+  <base href="file:///Users/troyalford/Projects/react-editable-treeview/" />
   <script type="text/javascript">
     /* eslint-disable */
     var base = document.location.host
@@ -13,7 +13,7 @@
       case 'troyalford.github.io':
         branch = 'master'
 
-        base = 'https://rawgit.com/TroyAlford/react-editable-treeview/' + branch + '/examples/lib/'
+        base = 'https://rawgit.com/TroyAlford/react-editable-treeview/' + branch + '/'
         break;
 
       default:
@@ -32,24 +32,12 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.min.js">
   </script>
 
-  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-  <style>
-    .treeview-container {
-      border: 1px solid #666;
-      font-family: Ubuntu;
-      font-size: 14px;
-      margin: 0;
-      padding: 0;
-    }
-    .treeview-container .node-list {
-      list-style: none;
-      margin: 0;
-      padding: 5px;
-    }
-    .treeview-container .node-list .node-list {
-      margin-left: 10px;
-    }
-  </style>
+  <link
+    href="https://fonts.googleapis.com/css?family=Ubuntu"
+    rel="stylesheet"
+  />
+  <link href="lib/TreeView.css" rel="stylesheet" />
+
  </head>
  <body>
   <div id="application">
@@ -57,6 +45,6 @@
   </div>
   <div id="log"></div>
 
-  <script type="text/javascript" src="example.min.js"></script>
+  <script type="text/javascript" src="examples/lib/example.min.js"></script>
  </body>
 </html>

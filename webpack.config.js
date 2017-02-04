@@ -5,7 +5,7 @@ const webpack = require('webpack')
 const ENVIRONMENT = process.env.NODE_ENV
 const PRODUCTION = ENVIRONMENT === 'production'
 
-const library = 'react-editable-treeview'
+const library = 'TreeView'
 const filename = PRODUCTION ? `${library}.min.js` : `${library}.js`
 
 const PLACEHOLDER = 'PLACEHOLDER'
@@ -35,7 +35,7 @@ const bundle = {
 
 module.exports = [
   Object.assign({}, bundle, {
-    /* Main Bundle */
+    /* Main JS Bundle */
     entry: `${__dirname}/src/components/TreeView.js`,
     output: Object.assign({}, bundle.output, {
       filename: `${library}.min.js`,
@@ -44,6 +44,7 @@ module.exports = [
     }),
   }),
   Object.assign({}, bundle, {
+    /* Main JS Bundle, minified */
     entry: `${__dirname}/src/components/TreeView.js`,
     output: Object.assign({}, bundle.output, {
       filename: `${library}.js`,
@@ -52,6 +53,7 @@ module.exports = [
     }),
     plugins: [],
   }),
+
   Object.assign({}, bundle, {
     /* Examples */
     entry: `${__dirname}/examples/src/example.js`,
@@ -60,5 +62,5 @@ module.exports = [
       library: 'example',
       path: `${__dirname}/examples/lib`,
     }),
-  }),
+  })
 ]
